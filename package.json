@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/chrome": "^0.0.246",
     "firebase": "^10.4.0",
+    "jotai": "^2.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zod": "^3.22.2"
