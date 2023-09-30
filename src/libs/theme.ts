@@ -5,7 +5,7 @@ const theme = createTheme({
     button: {
       textTransform: "none",
     },
-    fontSize: 12,
+    fontSize: 14,
   },
 });
 
