@@ -8,8 +8,13 @@ export class CustomError {
     }
     console.warn(this.createMessage("typeError", toStrValue));
   }
-
-  private static createMessage(type: "typeError", value: unknown) {
+  static unknownError(message: unknown) {
+    console.warn(this.createMessage("unknownError", message));
+  }
+  private static createMessage(
+    type: "typeError" | "unknownError",
+    value: unknown
+  ) {
     return `firebase-auth-switcher Error 
 type:${type} 
 message:${value}`;
