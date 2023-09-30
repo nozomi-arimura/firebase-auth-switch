@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
     "@types/chrome": "^0.0.246",
     "firebase": "^10.4.0",
     "jotai": "^2.4.3",
