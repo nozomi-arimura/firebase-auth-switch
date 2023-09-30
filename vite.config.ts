@@ -6,7 +6,7 @@ const manifest = defineManifest({
   manifest_version: 3,
   name: "Firebase AuthSwitcher",
   version: "1.0.0",
-  permissions: [],
+  permissions: ['activeTab','scripting'],
   action: {
     default_popup: "index.html",
   },
