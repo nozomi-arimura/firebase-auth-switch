@@ -16,7 +16,14 @@ const router = createHashRouter([
 ]);
 function App() {
   return (
-    <Box style={{ width: "37.5rem", minHeight: "200px" }}>
+    <Box
+      style={{
+        minWidth: "30rem",
+        maxWidth: "37.5rem",
+        minHeight: "200px",
+        padding: "0.5rem",
+      }}
+    >
       <RouterProvider router={router} />
     </Box>
   );
