@@ -41,11 +41,33 @@ export const useOriginSettings = () => {
     },
     [setOriginsSettings]
   );
+  const selectFirebaseConfig = useCallback(
+    (
+      matcher: OriginSetting["matcher"],
+      selectedAppId: FirebaseSetting["appId"]
+    ) => {
+      setOriginsSettings((prev) =>
+        prev.map((cur) =>
+          cur.matcher !== matcher
+            ? cur
+            : {
+                ...cur,
+                firebaseSettings: cur.firebaseSettings.map((cur) => ({
+                  ...cur,
+                  selected: cur.appId === selectedAppId,
+                })),
+              }
+        )
+      );
+    },
+    [setOriginsSettings]
+  );
   return useMemo(
     () => ({
       addFirebaseConfig,
       originsSettings,
+      selectFirebaseConfig,
     }),
-    [addFirebaseConfig, originsSettings]
+    [addFirebaseConfig, originsSettings, selectFirebaseConfig]
   );
 };

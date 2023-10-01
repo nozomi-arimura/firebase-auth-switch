@@ -7,6 +7,7 @@ import {
 import { pagePath } from "./constants/pagePath.ts";
 import Index from "./pages/index/index.page.tsx";
 import Initialize from "./pages/initialize/index.page.tsx";
+import Settings from "./pages/settings/index.page.tsx";
 import { useAppRouter } from "./hooks/useAppRouter.ts";
 import { ReactNode } from "react";
 import { useLoading } from "./atoms/loading.ts";
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
     path: pagePath.index,
     element: (
       <AppRouter>
-        <Index></Index>
+        <Index />
       </AppRouter>
     ),
   },
@@ -34,6 +35,14 @@ const router = createBrowserRouter([
     element: (
       <AppRouter>
         <Initialize />
+      </AppRouter>
+    ),
+  },
+  {
+    path: pagePath.settings,
+    element: (
+      <AppRouter>
+        <Settings />
       </AppRouter>
     ),
   },

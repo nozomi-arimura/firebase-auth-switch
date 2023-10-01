@@ -5,33 +5,45 @@ import {
   ListItem,
   ListItemText,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import styles from "./InitializeForm.module.css";
 import AddIcon from "@material-ui/icons/Add";
-import { useReducer } from "react";
-import { useFirebaseSettings } from "../../atoms/FirebaseSettings.ts";
+import { useReducer, useState } from "react";
+import {
+  FirebaseSetting,
+  useFirebaseSettings,
+} from "../../atoms/FirebaseSettings.ts";
+import { fetchWebConfig } from "../../libs/fetchWebConfig.ts";
 
-export type InitializeFormValues = {
+export type FirebaseProjectFormValues = {
   matcher: string;
   firebaseAppId: string;
   firebaseApiKey: string;
   description: string;
 };
 
-export type InitializeFormProps = {
+export type FirebaseProjectFormProps = {
   tabUrl: string;
-  onSubmit: (values: InitializeFormValues) => unknown;
+  onSubmit: (
+    values: FirebaseSetting & { matcher: FirebaseProjectFormValues["matcher"] }
+  ) => unknown;
+  withMatchingPattern?: boolean;
 };
 
-export const InitializeForm = ({ tabUrl, onSubmit }: InitializeFormProps) => {
+export const FirebaseProjectForm = ({
+  tabUrl,
+  onSubmit,
+  withMatchingPattern = true,
+}: FirebaseProjectFormProps) => {
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm<InitializeFormValues>({
+  } = useForm<FirebaseProjectFormValues>({
     mode: "onChange",
     defaultValues: {
       matcher: new URL(tabUrl).origin,
@@ -44,29 +56,52 @@ export const InitializeForm = ({ tabUrl, onSubmit }: InitializeFormProps) => {
   const { firebaseSettings } = useFirebaseSettings();
 
   const [modalOpen, switchModalOpen] = useReducer((prev) => !prev, false);
-
+  const [error, setError] = useState<string>();
   return (
-    <form className={styles.root} onSubmit={handleSubmit(onSubmit)}>
-      <TextField
-        fullWidth
-        label={"この設定を適用するURLパターン"}
-        error={Boolean(errors.matcher?.message)}
-        helperText={
-          errors.matcher?.message ||
-          "例 https://dev.XXXX.example.com.com → dev.*.example.com"
+    <form
+      className={styles.root}
+      onSubmit={handleSubmit(
+        async ({ firebaseAppId, firebaseApiKey, matcher, description }) => {
+          const webConfig = await fetchWebConfig({
+            firebaseApiKey,
+            firebaseAppId,
+          }).catch(() => {
+            setError("プロジェクトが見つかりませんでした");
+          });
+          if (!webConfig) return;
+          return Promise.resolve(
+            onSubmit({
+              ...webConfig,
+              description: description || webConfig.projectId,
+              matcher: matcher,
+              apiKey: firebaseApiKey,
+            })
+          );
         }
-        {...register("matcher", {
-          required: true,
-          validate: (value) => {
-            const errorMessage = "現在のOriginとマッチしません";
-            try {
-              return Boolean(tabUrl.match(value)?.length) || errorMessage;
-            } catch {
-              return errorMessage;
-            }
-          },
-        })}
-      />
+      )}
+    >
+      {withMatchingPattern && (
+        <TextField
+          fullWidth
+          label={"この設定を適用するURLパターン"}
+          error={Boolean(errors.matcher?.message)}
+          helperText={
+            errors.matcher?.message ||
+            "例 https://dev.XXXX.example.com.com → dev.*.example.com"
+          }
+          {...register("matcher", {
+            required: true,
+            validate: (value) => {
+              const errorMessage = "現在のOriginとマッチしません";
+              try {
+                return Boolean(tabUrl.match(value)?.length) || errorMessage;
+              } catch {
+                return errorMessage;
+              }
+            },
+          })}
+        />
+      )}
       <TextField
         fullWidth
         InputLabelProps={{
@@ -126,6 +161,7 @@ export const InitializeForm = ({ tabUrl, onSubmit }: InitializeFormProps) => {
           </Dialog>
         </div>
       )}
+      {error && <Typography color={"error"}>{error}</Typography>}
       <Button
         disabled={!isValid}
         variant={"outlined"}

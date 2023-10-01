@@ -1,4 +1,12 @@
-import { Box, Snackbar } from "@material-ui/core";
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Snackbar,
+} from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { SigninForm, SigninFormValues } from "../../components/SigninForm";
 import { useMatchedOriginSetting } from "../../hooks/useMatchedOriginSetting.ts";
@@ -9,10 +17,18 @@ import { useMemo, useState } from "react";
 import { useAuthList } from "../../atoms/authList.ts";
 import { AuthList } from "../../components/AuthList";
 import { sendAuth } from "../../libs/sendAuth.ts";
+import SettingsIcon from "@material-ui/icons/Settings";
+import styles from "./index.module.css";
+import { useNavigate } from "react-router-dom";
+import { pagePath } from "../../constants/pagePath.ts";
+import { useOriginSettings } from "../../atoms/originSettings.ts";
 
 const Page = () => {
   const { startLoading } = useLoading();
+  const navigate = useNavigate();
   const { tab } = useTabUrl();
+
+  const { selectFirebaseConfig } = useOriginSettings();
   const { matchedOriginSettings } = useMatchedOriginSetting({
     tabUrl: tab?.url,
   });
@@ -30,6 +46,7 @@ const Page = () => {
   if (!matchedOriginSettings || !selectedFirebaseSetting || tabId === undefined)
     return null;
   const authList = authListMap[selectedFirebaseSetting.appId];
+
   const onSubmit = async ({ email, password }: SigninFormValues) => {
     const user = await signin({
       email,
@@ -48,7 +65,12 @@ const Page = () => {
     });
   };
   return (
-    <Box sizeWidth={"1000px"}>
+    <Box className={styles.root}>
+      <span className={styles.setting}>
+        <IconButton size={"small"} onClick={() => navigate(pagePath.settings)}>
+          <SettingsIcon />
+        </IconButton>
+      </span>
       <Snackbar
         autoHideDuration={2000}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -60,9 +82,32 @@ const Page = () => {
           {error}
         </Alert>
       </Snackbar>
-      {/*<Box style={{ display: "flex", gap: "0.25rem," }}></Box>*/}
-      {/*{Boolean(matchedOriginSettings.firebaseSettings.length) &&*/}
-      {/*  matchedOriginSettings.firebaseSettings.map(() => <Button>{}</Button>)}*/}
+      <Box style={{ display: "flex", gap: "0.25rem," }}></Box>
+      <FormControl>
+        <RadioGroup row>
+          {Boolean(matchedOriginSettings.firebaseSettings.length) &&
+            matchedOriginSettings.firebaseSettings.map(
+              ({ appId, description }) => (
+                <FormControlLabel
+                  control={
+                    <Radio
+                      color={"primary"}
+                      onClick={() => {
+                        selectFirebaseConfig(
+                          matchedOriginSettings.matcher,
+                          appId
+                        );
+                      }}
+                      checked={selectedFirebaseSetting.appId === appId}
+                    />
+                  }
+                  label={description}
+                  key={appId}
+                />
+              )
+            )}
+        </RadioGroup>
+      </FormControl>
       {authList && (
         <AuthList
           authList={authList}

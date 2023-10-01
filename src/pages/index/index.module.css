@@ -1,0 +1,8 @@
+.root {
+  position: relative;
+}
+
+.setting {
+  display: flex;
+  justify-content: right;
+}
