@@ -1,4 +1,4 @@
 export const jotaiKey = {
-  allowPages: "allowPages",
+  originSetting: "originSetting",
   firebaseSettings: "firebaseSettings",
 } as const;

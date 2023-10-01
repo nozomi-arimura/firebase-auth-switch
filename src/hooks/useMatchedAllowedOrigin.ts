@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAllowOrigins } from "../atoms/AllowOrigins.ts";
+import { useOriginSettings } from "../atoms/originSettings.ts";
 
 export type UseIsAllowedOriginProps = {
   tabUrl: string | undefined;
@@ -7,17 +7,17 @@ export type UseIsAllowedOriginProps = {
 export const useMatchedAllowedOrigin = ({
   tabUrl,
 }: UseIsAllowedOriginProps) => {
-  const { allowPages } = useAllowOrigins();
+  const { originsSettings } = useOriginSettings();
 
   const isAllowed = useMemo(() => {
     if (!tabUrl) return;
-    return allowPages.find((page) => {
+    return originsSettings.find(({ matcher }) => {
       try {
-        return Boolean(tabUrl.match(page));
+        return Boolean(tabUrl.match(matcher));
       } catch {
         //
       }
     });
-  }, [allowPages, tabUrl]);
+  }, [originsSettings, tabUrl]);
   return useMemo(() => ({ isAllowed }), [isAllowed]);
 };
