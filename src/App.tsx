@@ -1,17 +1,39 @@
 import { Box } from "@material-ui/core";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { pagePath } from "./constants/pagePath.ts";
 import Index from "./pages/index/index.page.tsx";
 import Initialize from "./pages/initialize/index.page.tsx";
+import { useAppRouter } from "./hooks/useAppRouter.ts";
+import { ReactNode } from "react";
 
-const router = createHashRouter([
+const AppRouter = ({ children }: { children: ReactNode }) => {
+  useAppRouter();
+  return <>{children}</>;
+};
+const router = createBrowserRouter([
+  {
+    path: "/index.html",
+    element: <Navigate to={pagePath.index} />,
+  },
   {
     path: pagePath.index,
-    element: <Index />,
+    element: (
+      <AppRouter>
+        <Index></Index>
+      </AppRouter>
+    ),
   },
   {
     path: pagePath.initialize,
-    element: <Initialize />,
+    element: (
+      <AppRouter>
+        <Initialize />
+      </AppRouter>
+    ),
   },
 ]);
 function App() {
@@ -24,7 +46,7 @@ function App() {
         padding: "0.5rem",
       }}
     >
-      <RouterProvider router={router} />
+      <RouterProvider router={router}></RouterProvider>
     </Box>
   );
 }

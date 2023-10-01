@@ -4,12 +4,12 @@ import { useOriginSettings } from "../atoms/originSettings.ts";
 export type UseIsAllowedOriginProps = {
   tabUrl: string | undefined;
 };
-export const useMatchedAllowedOrigin = ({
+export const useMatchedOriginSetting = ({
   tabUrl,
 }: UseIsAllowedOriginProps) => {
   const { originsSettings } = useOriginSettings();
 
-  const isAllowed = useMemo(() => {
+  const matchedOriginSetting = useMemo(() => {
     if (!tabUrl) return;
     return originsSettings.find(({ matcher }) => {
       try {
@@ -19,5 +19,5 @@ export const useMatchedAllowedOrigin = ({
       }
     });
   }, [originsSettings, tabUrl]);
-  return useMemo(() => ({ isAllowed }), [isAllowed]);
+  return useMemo(() => ({ matchedOriginSetting }), [matchedOriginSetting]);
 };

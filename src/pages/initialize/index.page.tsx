@@ -4,18 +4,19 @@ import { fetchWebConfig } from "../../libs/fetchWebConfig.ts";
 import { useState } from "react";
 import { Typography } from "@material-ui/core";
 import { useFirebaseSettings } from "../../atoms/FirebaseSettings.ts";
+import { useOriginSettings } from "../../atoms/originSettings.ts";
 
 const Page = () => {
   const { tabUrl } = useTabUrl();
   const [error, setError] = useState<string>();
   const { updateFirebaseSettings } = useFirebaseSettings();
-
+  const { addFirebaseConfig } = useOriginSettings();
   if (!tabUrl) return null;
   return (
     <>
       <InitializeForm
         tabUrl={tabUrl}
-        onSubmit={async ({ firebaseApiKey, firebaseAppId }) => {
+        onSubmit={async ({ matcher, firebaseApiKey, firebaseAppId }) => {
           setError(undefined);
           const webConfig = await fetchWebConfig({
             firebaseApiKey,
@@ -24,11 +25,13 @@ const Page = () => {
             setError("プロジェクトが見つかりませんでした");
           });
           if (!webConfig) return;
-          updateFirebaseSettings({
+          const setting = {
             ...webConfig,
             apiKey: firebaseApiKey,
             description: webConfig.projectId,
-          });
+          };
+          updateFirebaseSettings(setting);
+          addFirebaseConfig(matcher, setting);
         }}
       />
       {error && <Typography color={"error"}>{error}</Typography>}
