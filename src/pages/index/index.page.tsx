@@ -27,7 +27,8 @@ const Page = () => {
     [matchedOriginSettings]
   );
 
-  if (!selectedFirebaseSetting || tabId === undefined) return null;
+  if (!matchedOriginSettings || !selectedFirebaseSetting || tabId === undefined)
+    return null;
   const authList = authListMap[selectedFirebaseSetting.appId];
   const onSubmit = async ({ email, password }: SigninFormValues) => {
     const user = await signin({
@@ -59,6 +60,9 @@ const Page = () => {
           {error}
         </Alert>
       </Snackbar>
+      {/*<Box style={{ display: "flex", gap: "0.25rem," }}></Box>*/}
+      {/*{Boolean(matchedOriginSettings.firebaseSettings.length) &&*/}
+      {/*  matchedOriginSettings.firebaseSettings.map(() => <Button>{}</Button>)}*/}
       {authList && (
         <AuthList
           authList={authList}

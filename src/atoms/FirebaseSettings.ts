@@ -11,10 +11,11 @@ export type FirebaseSetting = {
 
 const firebaseSettingAtom = atomWithStorage<{
   [apiKey: string]: FirebaseSetting | undefined;
-}>(jotaiKey.firebaseSettings, {});
+}>(jotaiKey.firebaseSettingMap, {});
 
 export const useFirebaseSettings = () => {
-  const [firebaseSettings, setFirebaseSettings] = useAtom(firebaseSettingAtom);
+  const [firebaseSettingMap, setFirebaseSettings] =
+    useAtom(firebaseSettingAtom);
   const updateFirebaseSettings = useCallback(
     (firebaseSetting: FirebaseSetting) => {
       setFirebaseSettings((prev) => ({
@@ -24,11 +25,16 @@ export const useFirebaseSettings = () => {
     },
     [setFirebaseSettings]
   );
+  const firebaseSettings = useMemo(
+    () => Object.values(firebaseSettingMap).flatMap((val) => (val ? val : [])),
+    [firebaseSettingMap]
+  );
   return useMemo(
     () => ({
+      firebaseSettingMap,
       firebaseSettings,
       updateFirebaseSettings,
     }),
-    [firebaseSettings, updateFirebaseSettings]
+    [firebaseSettings, firebaseSettingMap, updateFirebaseSettings]
   );
 };

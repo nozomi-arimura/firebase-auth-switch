@@ -2,10 +2,9 @@ import { useTabUrl } from "../../hooks/useTabUrl.ts";
 import { InitializeForm } from "./InitializeForm.tsx";
 import { fetchWebConfig } from "../../libs/fetchWebConfig.ts";
 import { useState } from "react";
-import { Typography } from "@material-ui/core";
+import { Dialog, Typography } from "@material-ui/core";
 import { useFirebaseSettings } from "../../atoms/FirebaseSettings.ts";
 import { useOriginSettings } from "../../atoms/originSettings.ts";
-
 const Page = () => {
   const { tabUrl } = useTabUrl();
   const [error, setError] = useState<string>();
@@ -16,7 +15,12 @@ const Page = () => {
     <>
       <InitializeForm
         tabUrl={tabUrl}
-        onSubmit={async ({ matcher, firebaseApiKey, firebaseAppId }) => {
+        onSubmit={async ({
+          matcher,
+          firebaseApiKey,
+          firebaseAppId,
+          description,
+        }) => {
           setError(undefined);
           const webConfig = await fetchWebConfig({
             firebaseApiKey,
@@ -28,12 +32,14 @@ const Page = () => {
           const setting = {
             ...webConfig,
             apiKey: firebaseApiKey,
-            description: webConfig.projectId,
+            description: description || webConfig.projectId,
           };
           updateFirebaseSettings(setting);
           addFirebaseConfig(matcher, { ...setting, selected: true });
         }}
       />
+
+      <Dialog open={false}>aaaa</Dialog>
       {error && <Typography color={"error"}>{error}</Typography>}
     </>
   );

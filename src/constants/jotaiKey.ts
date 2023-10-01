@@ -1,5 +1,5 @@
 export const jotaiKey = {
   originSetting: "originSetting",
-  firebaseSettings: "firebaseSettings",
+  firebaseSettingMap: "firebaseSettings",
   authList: "authList",
 } as const;
