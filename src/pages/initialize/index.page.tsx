@@ -29,10 +29,9 @@ const Page = () => {
             ...webConfig,
             apiKey: firebaseApiKey,
             description: webConfig.projectId,
-            selected: true,
           };
           updateFirebaseSettings(setting);
-          addFirebaseConfig(matcher, setting);
+          addFirebaseConfig(matcher, { ...setting, selected: true });
         }}
       />
       {error && <Typography color={"error"}>{error}</Typography>}

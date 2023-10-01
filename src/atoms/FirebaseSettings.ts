@@ -7,7 +7,6 @@ import { useCallback, useMemo } from "react";
 export type FirebaseSetting = {
   apiKey: string;
   description: string;
-  selected: boolean;
 } & WebConfig;
 
 const firebaseSettingAtom = atomWithStorage<{

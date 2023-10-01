@@ -13,7 +13,6 @@ export const signin = async ({
   email,
   password,
   tabId,
-  selected,
   ...firebaseSetting
 }: SigninProps) => {
   const firebaseApp = initializeApp(firebaseSetting);
@@ -27,7 +26,7 @@ export const signin = async ({
   await sendAuth({
     tabId,
     user: user.toJSON(),
-    firebaseSetting: { ...firebaseSetting, selected },
+    firebaseSetting,
   });
   return user;
 };

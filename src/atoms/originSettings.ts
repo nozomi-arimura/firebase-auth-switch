@@ -6,7 +6,7 @@ import { FirebaseSetting } from "./FirebaseSettings.ts";
 import { uniqueObjectArray } from "../utils/uniqueObjectArray.ts";
 export type OriginSetting = {
   matcher: string;
-  firebaseSettings: FirebaseSetting[];
+  firebaseSettings: (FirebaseSetting & { selected: boolean })[];
 };
 
 const originsSettingsAtom = atomWithStorage<OriginSetting[]>(
@@ -17,7 +17,10 @@ const originsSettingsAtom = atomWithStorage<OriginSetting[]>(
 export const useOriginSettings = () => {
   const [originsSettings, setOriginsSettings] = useAtom(originsSettingsAtom);
   const addFirebaseConfig = useCallback(
-    (matcher: OriginSetting["matcher"], setting: FirebaseSetting) => {
+    (
+      matcher: OriginSetting["matcher"],
+      setting: FirebaseSetting & { selected: boolean }
+    ) => {
       setOriginsSettings((prev) => {
         const exists = prev.find((curr) => curr.matcher === matcher);
         if (exists)
