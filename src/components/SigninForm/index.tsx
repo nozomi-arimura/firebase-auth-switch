@@ -19,12 +19,18 @@ export const SigninForm = ({ onSubmit }: SigninFormProps) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isValid },
   } = useForm<SigninFormValues>({
     mode: "onChange",
   });
   return (
-    <form className={classes.root} onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={classes.root}
+      onSubmit={handleSubmit((data) => {
+        Promise.resolve(onSubmit(data)).then(() => reset());
+      })}
+    >
       <TextField
         type={"email"}
         fullWidth

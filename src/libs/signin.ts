@@ -32,5 +32,11 @@ export const signin = async ({
     type: MESSAGE_TYPE.SIGNIN,
     indexedDbValue: dbSavedValue,
   };
-  await chrome.tabs.sendMessage(tabId, message);
+  await new Promise((resolve, reject) => {
+    setTimeout(() => reject(), 10 * 1000);
+    chrome.tabs.sendMessage(tabId, message, () => {
+      resolve(undefined);
+    });
+  });
+  return user;
 };

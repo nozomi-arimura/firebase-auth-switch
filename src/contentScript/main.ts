@@ -3,7 +3,8 @@ import { MessageSchema } from "../libs/message/index.types.ts";
 import { CustomError } from "../utils/CustomError.class.ts";
 import { MESSAGE_TYPE } from "../constants/message.ts";
 
-chrome.runtime.onMessage.addListener((message) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
   if (!isTypeOf(MessageSchema)(message)) return CustomError.typeError(message);
 
   if (message.type === MESSAGE_TYPE.SIGNIN) {
@@ -12,6 +13,8 @@ chrome.runtime.onMessage.addListener((message) => {
       const tr = db.result.transaction("firebaseLocalStorage", "readwrite");
       const store = tr.objectStore("firebaseLocalStorage");
       store.put(message.indexedDbValue);
+      sendResponse("signin!");
     };
+    return true;
   }
 });

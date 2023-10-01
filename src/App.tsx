@@ -9,6 +9,8 @@ import Index from "./pages/index/index.page.tsx";
 import Initialize from "./pages/initialize/index.page.tsx";
 import { useAppRouter } from "./hooks/useAppRouter.ts";
 import { ReactNode } from "react";
+import { useLoading } from "./atoms/loading.ts";
+import { Loading } from "./components/Loading";
 
 const AppRouter = ({ children }: { children: ReactNode }) => {
   useAppRouter();
@@ -37,6 +39,7 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
+  const { isLoading } = useLoading();
   return (
     <Box
       style={{
@@ -46,6 +49,7 @@ function App() {
         padding: "0.5rem",
       }}
     >
+      <Loading isLoading={isLoading} />
       <RouterProvider router={router}></RouterProvider>
     </Box>
   );

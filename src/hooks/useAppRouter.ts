@@ -11,7 +11,6 @@ export const useAppRouter = () => {
   const { matchedOriginSetting } = useMatchedOriginSetting({ tabUrl });
 
   useEffect(() => {
-    console.log(matchedOriginSetting);
     if (pathname === pagePath.index && tabUrl && !matchedOriginSetting)
       navigate(pagePath.initialize);
     if (pathname === pagePath.initialize && matchedOriginSetting)

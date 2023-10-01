@@ -1,0 +1,20 @@
+.root {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0 0 0 / 0%);
+  opacity: 0;
+  transition: background-color 300ms, opacity 300ms;
+}
+
+.visible {
+  background-color: rgb(0 0 0 / 30%);
+  opacity: 1;
+}
+
+.invisible {
+  pointer-events: none;
+}
