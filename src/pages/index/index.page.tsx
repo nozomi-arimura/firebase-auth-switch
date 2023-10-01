@@ -1,28 +1,76 @@
-import { Box } from "@material-ui/core";
+import { Box, Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { SigninForm, SigninFormValues } from "../../components/SigninForm";
 import { useMatchedOriginSetting } from "../../hooks/useMatchedOriginSetting.ts";
 import { useTabUrl } from "../../hooks/useTabUrl.ts";
 import { signin } from "../../libs/signin.ts";
 import { useLoading } from "../../atoms/loading.ts";
+import { useMemo, useState } from "react";
+import { useAuthList } from "../../atoms/authList.ts";
+import { AuthList } from "../../components/AuthList";
+import { sendAuth } from "../../libs/sendAuth.ts";
 
 const Page = () => {
   const { startLoading } = useLoading();
   const { tab } = useTabUrl();
-  const { matchedOriginSetting } = useMatchedOriginSetting({
+  const { matchedOriginSettings } = useMatchedOriginSetting({
     tabUrl: tab?.url,
   });
+  const { addAuth, authListMap } = useAuthList();
+  const [error, setError] = useState<string>();
   const tabId = tab?.id;
-  if (!matchedOriginSetting || tabId === undefined) return null;
+  const selectedFirebaseSetting = useMemo(
+    () =>
+      matchedOriginSettings?.firebaseSettings.find(
+        ({ selected }) => selected
+      ) || matchedOriginSettings?.firebaseSettings[0],
+    [matchedOriginSettings]
+  );
+
+  if (!selectedFirebaseSetting || tabId === undefined) return null;
+  const authList = authListMap[selectedFirebaseSetting.appId];
   const onSubmit = async ({ email, password }: SigninFormValues) => {
-    await signin({
+    const user = await signin({
       email,
       password,
       tabId,
-      ...matchedOriginSetting.firebaseSettings[0],
+      ...selectedFirebaseSetting,
+    }).catch((reason) => {
+      setError("サインアップに失敗しました");
+      throw reason;
+    });
+    addAuth({
+      email,
+      firebaseAppId: selectedFirebaseSetting.appId,
+      userJson: user.toJSON(),
+      description: email,
     });
   };
   return (
     <Box sizeWidth={"1000px"}>
+      <Snackbar
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={!!error}
+        onClose={() => setError(undefined)}
+        title={error}
+      >
+        <Alert severity={"error"} onClose={() => setError(undefined)}>
+          {error}
+        </Alert>
+      </Snackbar>
+      {authList && (
+        <AuthList
+          authList={authList}
+          onSignin={(auth) =>
+            sendAuth({
+              user: auth.userJson,
+              tabId,
+              firebaseSetting: selectedFirebaseSetting,
+            }).finally(startLoading())
+          }
+        />
+      )}
       <SigninForm
         onSubmit={(props) => onSubmit(props).finally(startLoading())}
       />

@@ -29,6 +29,7 @@ const Page = () => {
             ...webConfig,
             apiKey: firebaseApiKey,
             description: webConfig.projectId,
+            selected: true,
           };
           updateFirebaseSettings(setting);
           addFirebaseConfig(matcher, setting);

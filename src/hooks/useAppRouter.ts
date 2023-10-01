@@ -8,12 +8,12 @@ export const useAppRouter = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { tabUrl } = useTabUrl();
-  const { matchedOriginSetting } = useMatchedOriginSetting({ tabUrl });
+  const { matchedOriginSettings } = useMatchedOriginSetting({ tabUrl });
 
   useEffect(() => {
-    if (pathname === pagePath.index && tabUrl && !matchedOriginSetting)
+    if (pathname === pagePath.index && tabUrl && !matchedOriginSettings)
       navigate(pagePath.initialize);
-    if (pathname === pagePath.initialize && matchedOriginSetting)
+    if (pathname === pagePath.initialize && matchedOriginSettings)
       navigate(pagePath.index);
-  }, [pathname, tabUrl, matchedOriginSetting, navigate]);
+  }, [pathname, tabUrl, matchedOriginSettings, navigate]);
 };

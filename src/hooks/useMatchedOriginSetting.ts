@@ -9,7 +9,7 @@ export const useMatchedOriginSetting = ({
 }: UseIsAllowedOriginProps) => {
   const { originsSettings } = useOriginSettings();
 
-  const matchedOriginSetting = useMemo(() => {
+  const matchedOriginSettings = useMemo(() => {
     if (!tabUrl) return;
     return originsSettings.find(({ matcher }) => {
       try {
@@ -19,5 +19,6 @@ export const useMatchedOriginSetting = ({
       }
     });
   }, [originsSettings, tabUrl]);
-  return useMemo(() => ({ matchedOriginSetting }), [matchedOriginSetting]);
+
+  return useMemo(() => ({ matchedOriginSettings }), [matchedOriginSettings]);
 };
