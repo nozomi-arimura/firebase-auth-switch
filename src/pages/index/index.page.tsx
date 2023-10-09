@@ -32,7 +32,7 @@ const Page = () => {
   const { matchedOriginSettings } = useMatchedOriginSetting({
     tabUrl: tab?.url,
   });
-  const { addAuth, authListMap } = useAuthList();
+  const { addAuth, authListMap, removeAuth } = useAuthList();
   const [error, setError] = useState<string>();
   const tabId = tab?.id;
   const selectedFirebaseSetting = useMemo(
@@ -111,6 +111,7 @@ const Page = () => {
       {authList && (
         <AuthList
           authList={authList}
+          onRemove={removeAuth}
           onSignin={(auth) =>
             sendAuth({
               user: auth.userJson,
