@@ -1,27 +1,21 @@
-# React + TypeScript + Vite
+# Firebase Auth Switcher Chrome 拡張機能
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Firebase Auth Switcher Chrome 拡張機能は、Firebase認証プロファイルを簡単に切り替えることができる拡張機能です。この拡張機能を使用すると、異なるFirebase認証プロファイル間をスムーズに切り替えることができます。
 
-Currently, two official plugins are available:
+## インストール
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. このリポジトリをクローンまたはダウンロードします。
 
-## Expanding the ESLint configuration
+2. Google Chromeを開き、右上のメニューアイコン（三本線）をクリックし、[その他のツール] > [拡張機能]を選択します。
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+3. ページ上部の「デベロッパーモード」を有効にします。
 
-- Configure the top-level `parserOptions` property like this:
+4. "パッケージ化されていない拡張機能を読み込む" ボタンをクリックし、ダウンロードしたフォルダを選択します。
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+5. 拡張機能がChromeに追加されました。拡張機能バーにアイコンが表示されます。
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 使い方
+
+1. 拡張機能アイコンをクリックして、Firebase Auth Switcherを起動します。
+
+2. Firebaseプロジェクトの異なる認証プロファイルを選択します。
