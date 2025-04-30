@@ -16,10 +16,25 @@ const manifest = defineManifest({
       matches: ["<all_urls>"],
     },
   ],
+  web_accessible_resources: [
+    {
+      resources: ["assets/main.ts.js", "assets/CustomError.class.js"],
+      matches: ["<all_urls>"],
+    },
+  ],
 });
 
 export default defineConfig({
   plugins: [react(), crx({ manifest })],
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
+  },
   server: {
     port: 5173,
     strictPort: true,
